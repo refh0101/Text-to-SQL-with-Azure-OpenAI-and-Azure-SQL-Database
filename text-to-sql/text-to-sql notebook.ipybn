@@ -1,1 +1,60 @@
+# installing relevant libraries
 
+! pip install python-dotenv
+! pip install langchain_openai
+! pip install langchain_experimental
+! pip install SQLAlchemy
+
+
+# Reference the .env file for the connection details of the llm model that would help generate the response for natiral language to sql
+
+from langchain_openai import AzureOpenAI
+from dotenv import dotenv_values 
+config = dotenv_values("configuration.env")
+
+
+# Connection to the llm on open ai
+
+from langchain.llms import OpenAI
+
+llm = AzureOpenAI(
+    model=config["OPENAI_MODEL"],
+    deployment_name=config["OPENAI_DEPLOYMENT_NAME"],
+    api_key=config["OPENAI_API_KEY"],
+    api_version=config["OPENAI_API_VERSION"],
+    azure_endpoint=config["OPENAI_ENDPOINT"],
+    temperature=0
+)
+
+
+# connection to the database, and verifying the tables in the server we are connected so(Focused on the Table Product due to less token of the llm m odel used)
+
+
+from sqlalchemy import create_engine
+from langchain.sql_database import SQLDatabase
+from urllib.parse import quote_plus
+from dotenv import dotenv_values
+
+config = dotenv_values("configuration.env")
+
+encoded_conn_str = quote_plus(config["AZURE_SQL_CONNECTION"])
+
+engine = create_engine(f"mssql+pyodbc:///?odbc_connect={encoded_conn_str}")
+
+
+// database = SQLDatabase(engine, schema="SalesLT")
+database = SQLDatabase(engine, schema="SalesLT", include_tables=["Product"])
+print(database.get_usable_table_names())
+
+
+# This is so that we can use langchain to convert the text to sql query
+
+from langchain_experimental.sql import SQLDatabaseChain
+db_chain = SQLDatabaseChain.from_llm(llm, database, verbose=True, use_query_checker=True)
+
+
+
+# Query for putting it to the text, using natuarl language to query the database, the llm is used to bring the response from the help of langchain
+
+response = db_chain.run("Show 3 products from the Product table.")
+print(response)
