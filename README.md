@@ -1,77 +1,62 @@
-# Text-to-SQL-with-Azure-OpenAI-and-Azure-SQL-Database
-This project demonstrates how to use natural language to query an Azure SQL Database using Azure OpenAI's gpt-35-turbo-instruct model. The goal is to empower users to interact with a relational database using plain English, translating those queries into SQL and returning the results—all without needing to write a single line of SQL themselves.
+# 🧠 Text-to-SQL with Azure OpenAI and Azure SQL Database
 
-### 🚀 Overview
-In this solution:
+This project demonstrates how to use **natural language** to query an **Azure SQL Database** using **Azure OpenAI's `gpt-35-turbo-instruct`** model. The goal is to empower users to interact with relational data using plain English, automatically generating and executing the corresponding SQL behind the scenes.
 
-We use AdventureWorks sample data hosted on an Azure SQL Database.
+---
 
-We leverage Azure OpenAI (GPT-35 Turbo Instruct model) for generating SQL queries.
+## 🚀 Overview
 
-We integrate everything in Jupyter Notebooks with the help of tools like LangChain, SQLAlchemy, and Azure OpenAI SDK.
+- Uses **AdventureWorks** sample data hosted on **Azure SQL Database**  
+- Leverages **Azure OpenAI (`gpt-35-turbo-instruct`)** to translate questions into SQL  
+- Integration is done via **Jupyter Notebooks** using:
+  - `LangChain`
+  - `SQLAlchemy`
+  - `azure-openai`  
+- Development and testing is done in **Visual Studio Code**
 
-Code is developed and tested in Visual Studio Code.
+---
 
-### 🧰 Tools & Technologies Used
-Tool/Tech	Purpose
-Azure SQL Database	Hosted relational data (AdventureWorks)
-Azure OpenAI	Used GPT-35 Turbo Instruct for NL-to-SQL generation
-LangChain	Chain LLM prompts with SQL execution logic
-SQLAlchemy	ORM and database connection
-azure-openai	Azure-hosted LLM integration
-Python (Jupyter Notebooks)	Development and testing environment
-VS Code	IDE for writing and testing code
+## 🧰 Tools & Technologies Used
 
-###🔧 Setup Process
-Create an Azure SQL Database
+| Tool / Technology       | Purpose                                                |
+|------------------------|--------------------------------------------------------|
+| **Azure SQL Database** | Hosts the relational AdventureWorks data               |
+| **Azure OpenAI**       | Converts natural language to SQL using GPT-35 Turbo    |
+| **LangChain**          | Chains prompts and SQL execution                       |
+| **SQLAlchemy**         | ORM and database connection                            |
+| **azure-openai**       | SDK for connecting to Azure-hosted LLM                 |
+| **Python / Jupyter**   | Development and testing environment                    |
+| **Visual Studio Code** | IDE for building and testing the solution              |
 
-Populate it with AdventureWorks data.
+---
 
-Ensure firewall and connection settings are configured for remote access.
+## 🔧 Setup Instructions
 
-Create and Deploy Azure OpenAI Model
+### 1. Provision Azure SQL Database
 
-Use gpt-35-turbo-instruct.
+- Create a new Azure SQL database
+- Import the **AdventureWorks** sample data
+- Configure firewall and access settings
 
-Deploy the model under Azure OpenAI Studio.
+### 2. Deploy GPT-35 Turbo on Azure OpenAI
 
-Retrieve the endpoint and API key.
+- Use the `gpt-35-turbo-instruct` model (non-chat variant)
+- Deploy via Azure OpenAI Studio
+- Note down:
+  - **Endpoint**
+  - **Deployment name**
+  - **API key**
 
-Store Secrets in .env File
+### 3. Configure `.env` File
 
-Add both the Azure SQL connection string and Azure OpenAI credentials in .env:
+Create a `.env` file in your project root and include:
 
-env
-Copy
-Edit
-AZURE_OPENAI_API_KEY=your_key
-AZURE_OPENAI_ENDPOINT=https://your-endpoint.openai.azure.com/
+```env
+AZURE_OPENAI_API_KEY=your_api_key
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
 AZURE_OPENAI_DEPLOYMENT=gpt-35-turbo-instruct
+
 SQL_SERVER=your_sql_server.database.windows.net
 SQL_DATABASE=AdventureWorks
 SQL_USERNAME=your_username
 SQL_PASSWORD=your_password
-Install Required Python Libraries
-
-bash
-Copy
-Edit
-pip install langchain openai azure-openai sqlalchemy python-dotenv
-Initialize LangChain and SQL Connection in Jupyter
-
-Import libraries
-
-Load environment variables
-
-Set up SQL engine and LangChain LLM chain
-
-Run Text-to-SQL Queries
-
-Use .run("your question in plain English") to get SQL-generated answers from the database.
-
-Example:
-
-python
-Copy
-Edit
-db_chain.run("How many customers do we have?")
